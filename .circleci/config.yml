@@ -22,9 +22,6 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -e .
-            pip install coverage
-            pip install pytest
             pip install -r requirements.ini
 
       - save_cache:
