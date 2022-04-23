@@ -2,11 +2,9 @@ version: 2.1
 orbs:
   browser-tools: circleci/browser-tools@1.2.3
 workflows:
-  version: 2
   test:
     jobs:
       - build
-
 jobs:
   build:
     docker:
@@ -37,8 +35,8 @@ jobs:
             . venv/bin/activate
             coverage run --source=mytest --omit='*tests*,*migrations*,*admin*,*mytest*' -m py.test -v --tb=native
             coverage report
-            coverage html  # open htmlcov/index.html in a
-
+            coverage html  # open htmlcov/index.html in a browser
+            
       # store artifacts (for example logs, binaries, etc)
       # to be available in the web app or through the API
       - store_artifacts:
