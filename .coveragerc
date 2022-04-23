@@ -1,0 +1,4 @@
+[run]
+source = .
+omit = *tests*, *commands*, *migrations*, *admin*, *mytest*, *wsgi*
+plugins = django_coverage_plugin

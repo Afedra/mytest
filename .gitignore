@@ -1,0 +1,15 @@
+*.sqlite
+media
+static
+*.pyc
+*.mo
+.coverage
+.cache
+.\#*
+.project
+.idea
+.env
+.envrc
+.pytest_cache
+.vscode
+.htmlcov
