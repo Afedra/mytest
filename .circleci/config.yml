@@ -1,21 +1,20 @@
-version: 2
+version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.2.3
 workflows:
   version: 2
   test:
     jobs:
-      - test-3.6
-      - test-3.7
-      - test-3.8
+      - build
 
-orbs: 
-  coveralls: coveralls/coveralls@1.0.6
 jobs:
-  test-3.6: &test-template
+  build:
     docker:
-      - image: circleci/python:3.6
+    - image: cimg/python:3.10-browsers
     working_directory: ~/repo
     steps:
       - checkout
+      - browser-tools/install-browser-tools
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "requirements.ini" }}
@@ -37,94 +36,11 @@ jobs:
           command: |
             . venv/bin/activate
             coverage run --source=mytest --omit='*tests*,*migrations*,*admin*,*mytest*' -m py.test -v --tb=native
-
-      - coveralls/upload:
-          token: PWePkOslEnfKgedsFRROHgzZZLPd8eMb8zDzW 
+            coverage report
+            coverage html  # open htmlcov/index.html in a
 
       # store artifacts (for example logs, binaries, etc)
       # to be available in the web app or through the API
       - store_artifacts:
           path: test-reports
       
-  test-3.7:
-    <<: *test-template
-    docker:
-      - image: circleci/python:3.7
-
-  test-3.8:
-    <<: *test-template
-    docker:
-      - image: circleci/python:3.8
-
-commands:
-  upload:
-    parameters:
-      path_to_lcov:
-        description: >
-          Local path to the lcov output file produced by your test suite.
-          An error will be thrown if the file can't be found. This is the file that will be sent to the Coveralls API.
-        type: string
-        default: ./coverage/lcov.info
-      token:
-        description: Your Coveralls Repo token defined in your Circle's Environment Variables.
-        type: env_var_name
-        default: COVERALLS_REPO_TOKEN
-      flag_name:
-        description: Options flag name of the job, e.g. "Unit Tests", "Integration Tests", etc.
-        type: string
-        default: ''
-      parallel:
-        description: Set to true for parallel jobs, where multiple posts to Coveralls will be performed before completing the build with `parallel_finished`.
-        type: boolean
-        default: false
-      parallel_finished:
-        description: Set to true in the final job, after the other parallel jobs steps have completed. This will send a webhook to Coveralls to set the build complete.
-        type: boolean
-        default: false
-      coveralls_endpoint:
-        description: >
-          Hostname and protocol (https://<host>). Specifies a Coveralls Enterprise hostname.
-          You can also define this in your Circle's Environment Variables as COVERALLS_ENDPOINT
-        type: string
-        default: 'https://coveralls.io'
-      verbose:
-        description: Set to true for verbose output from the Coveralls API push.
-        type: boolean
-        default: false
-    steps:
-      - run:
-          name: Upload Coverage Result To Coveralls
-          command: |
-            if << parameters.parallel_finished >>; then
-              curl "<< parameters.coveralls_endpoint >>/webhook?repo_token=$<< parameters.token >>" \
-                -d "payload[build_num]=$CIRCLE_WORKFLOW_ID&payload[status]=done"
-              exit 0
-            fi
-
-            if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
-
-            $SUDO npm install -g coveralls
-
-            if [ ! $COVERALLS_REPO_TOKEN ]; then
-              export COVERALLS_REPO_TOKEN=$<< parameters.token >>
-            fi
-
-            export COVERALLS_ENDPOINT=<< parameters.coveralls_endpoint >>
-
-            export COVERALLS_FLAG_NAME="<< parameters.flag_name >>"
-
-            if << parameters.parallel >>; then
-              export COVERALLS_PARALLEL=true
-            fi
-
-            # check for lcov file presence:
-            if [ ! -r << parameters.path_to_lcov >> ]; then
-              echo "Please specify a valid 'path_to_lcov' parameter."
-              exit 1
-            fi
-
-            if << parameters.verbose >>; then
-              cat << parameters.path_to_lcov >> | coveralls --verbose
-            else
-              cat << parameters.path_to_lcov >> | coveralls
-            fi
