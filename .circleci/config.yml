@@ -41,7 +41,8 @@ jobs:
       # to be available in the web app or through the API
       - store_artifacts:
           path: test-reports
-
+      - coveralls/upload:
+      
   test-3.7:
     <<: *test-template
     docker:
