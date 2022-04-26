@@ -1,4 +1,4 @@
-*.sqlite
+# *.sqlite
 media
 static
 *.pyc
