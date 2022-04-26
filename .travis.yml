@@ -1,0 +1,17 @@
+sudo: false
+language: python
+python:
+  - "3.4"
+  - "3.5"
+cache:
+  - apt
+  - pip
+before_script:
+  - python3 manage.py makemigrations 
+  - python3 manage.py migrate
+install:
+  - pip install -r requirements.ini
+script:
+  - coverage run --source=. --omit='*tests*,*migrations*,*admin*' -m py.test -v --tb=native
+after_success:
+  - coveralls
