@@ -7,8 +7,8 @@ cache:
   - apt
   - pip
 before_script:
-  - python3 manage.py makemigrations 
-  - python3 manage.py migrate
+  - python manage.py makemigrations 
+  - python manage.py migrate
 install:
   - pip install -r requirements.ini
 script:
