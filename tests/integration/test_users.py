@@ -13,18 +13,18 @@ pytestmark = pytest.mark.django_db
 ##############################
 
 def test_users_create_through_standard_api(client):
-    user = f.UserFactory.create(is_superuser=True)
+    user = f.UserFactory.create(is_superuser=True) # create user
 
     url = reverse('users-list')
     data = {}
 
-    response = client.post(url, json.dumps(data), content_type="application/json")
-    assert response.status_code == 405
+    response = client.post(url, json.dumps(data), content_type="application/json")  # picks users from api after creating
+    assert response.status_code == 405 # returns 405 because the user we are picking doesn't exist.
 
-    client.login(user)
+    client.login(user) # now we also try to login
 
-    response = client.post(url, json.dumps(data), content_type="application/json")
-    assert response.status_code == 405
+    response = client.post(url, json.dumps(data), content_type="application/json") # then we try again
+    assert response.status_code == 405 # it still returns 405
 
 
 ##############################
