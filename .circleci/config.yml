@@ -30,7 +30,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            coverage run --source=mytest --omit='*tests*,*migrations*,*admin*,*mytest*' -m py.test -v --tb=native
+            coverage run --source=. --omit='*tests*,*migrations*,*admin*' -m py.test -v --tb=native
             coverage report
             coverage html  # open htmlcov/index.html in a browser
 

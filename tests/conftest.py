@@ -14,6 +14,3 @@ def pytest_runtest_setup(item):
 def pytest_configure(config):
     django.setup()
  
-def pytest_cmdline_preparse(config, args):
-    config.option.htmlpath = "my-report.html"
-    config.option.self_contained_html = True
