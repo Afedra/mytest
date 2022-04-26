@@ -6,9 +6,6 @@ python:
 cache:
   - apt
   - pip
-before_script:
-  - python manage.py makemigrations 
-  - python manage.py migrate
 install:
   - pip install -r requirements.ini
 script:
