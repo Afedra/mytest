@@ -21,7 +21,9 @@ from users.api import UsersViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"users", UsersViewSet, basename="users")
+# router.register(r"groups", UsersViewSet, basename="groups")
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('admin/', admin.site.urls),
 ]
