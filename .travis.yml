@@ -9,9 +9,10 @@ cache:
   - pip
 install:
   - pip install -r requirements.ini
-script:
+before_script:
   - python manage.py makemigrations 
   - python manage.py migrate
+script:
   - coverage run --source=. --omit='*tests*,*migrations*,*admin*' -m py.test -v --tb=native
 after_success:
   - coveralls
