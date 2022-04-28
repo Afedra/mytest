@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/ebartile/mytest/badge.svg?branch=main)](https://coveralls.io/github/ebartile/mytest?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Afedra/mytest/badge.svg?branch=main)](https://coveralls.io/github/Afedra/mytest?branch=main)
 
 ## Documentation 
 We shall install using the following commands:
